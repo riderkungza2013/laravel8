@@ -1,5 +1,5 @@
 <x-bootstrap-theme>
-<h1>Covid19 #{{ $covid19->id }}</h1>
+<h1>Staff #{{ $staff->id }}</h1>
 <table class="table table-sm" style="width:50%">
     <tbody>
         <tr><th> ID </th><td>{{ $covid19->id }}</td></tr>
