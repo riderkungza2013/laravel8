@@ -1,7 +1,7 @@
-<x-bootstrap-theme>
+<x-themequiz title="">
     <div class="container">
         <div class="row">
-            
+
 
             <div class="col-md-12">
                 <div class="card">
@@ -22,20 +22,31 @@
                             </div>
                         </form>
 
-                        <br/>
-                        <br/>
+                        <br />
+                        <br />
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Total</th><th>User Id</th><th>Order Id</th><th>Slip</th><th>Actions</th>
+                                        <th>#</th>
+                                        <th>Total</th>
+                                        <th>User Id</th>
+                                        <th>Order Id</th>
+                                        <th>Slip</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($payment as $item)
+                                    @foreach($payment as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->total }}</td><td>{{ $item->user_id }}</td><td>{{ $item->order_id }}</td><td>{{ $item->slip }}</td>
+                                        <td>{{ $item->total }}</td>
+                                        <!-- <td>{{ $item->user_id }}</td> -->
+                                        <td> {{ $item->user->name }}</td>
+                                        <td>{{ $item->order_id }}</td>
+                                        <!-- <td>{{ $item->slip }}</td> -->
+                                        <td> <img src="{{ url('storage/'.$item->slip )}}" width="100" /> </td>
+
                                         <td>
                                             <a href="{{ url('/payment/' . $item->id) }}" title="View Payment"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/payment/' . $item->id . '/edit') }}" title="Edit Payment"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
@@ -43,11 +54,11 @@
                                             <form method="POST" action="{{ url('/payment' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Payment" onclick="return confirm('Confirm delete?';)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Payment" onclick="return confirm('Confirm delete?')"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                                             </form>
                                         </td>
                                     </tr>
-                                @endforeach
+                                    @endforeach
                                 </tbody>
                             </table>
                             <div class="pagination-wrapper"> {!! $payment->appends(['search' => Request::get('search')])->render() !!} </div>
@@ -58,4 +69,4 @@
             </div>
         </div>
     </div>
-</x-bootstrap-theme>
+</x-themequiz>

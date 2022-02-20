@@ -1,4 +1,4 @@
-<x-bootstrap-theme>
+<x-themequiz title="">
     <div class="container">
         <div class="row">
 
@@ -30,4 +30,4 @@
             </div>
         </div>
     </div>
-</x-bootstrap-theme>
+</x-themequiz>

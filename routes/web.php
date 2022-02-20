@@ -96,7 +96,7 @@ Route::get("/spider", function () {
 
     return view("test/spider", compact("spider"));
 });
-Route::middleware(['auth','role:admin,teacher,manager,finance'])->group(function () {
+Route::middleware(['auth', 'role:admin,teacher,manager,finance'])->group(function () {
     Route::get("/teacher", function () {
         return view("teacher");
     });
@@ -193,9 +193,10 @@ Route::resource('user', UserController::class);
 Route::resource('vehicle', VehicleController::class);
 
 Route::resource('product', ProductController::class);
+
 //CASE STUDT
 Route::middleware(['auth'])->group(function () {
-Route::resource('order', OrderController::class);
-Route::resource('payment', PaymentController::class);
-Route::resource('order-product', OrderProductController::class);
+    Route::resource('order', OrderController::class);
+    Route::resource('payment', PaymentController::class);
+    Route::resource('order-product', OrderProductController::class);
 });
