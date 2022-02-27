@@ -22,15 +22,15 @@ class OrderController extends Controller
     {
         $keyword = $request->get('search');
         $perPage = 25;
-        switch(Auth::user()->role)
-        {
-            case "admin" : 
+        switch (Auth::user()->role) {
+            case "admin":
                 $order = Order::latest()->paginate($perPage);
+
                 break;
-            default : 
+            default:
                 //means guest
-                $order = Order::where('user_id',Auth::id() )->latest()->paginate($perPage);            
-        } 
+                $order = Order::where('user_id', Auth::id())->latest()->paginate($perPage);
+        }
 
 
         // if (!empty($keyword)) {
@@ -74,22 +74,21 @@ class OrderController extends Controller
         $requestData = $request->all();
         //รวมราคาสินค้าในตะกร้า
         $total = OrderProduct::whereNull('order_id')
-            ->where('user_id', Auth::id() )->sum('total');
+            ->where('user_id', Auth::id())->sum('total');
         //กำหนดราคารวม, ผู้ใช้, สถานะ
         $requestData['total'] = $total;
         $requestData['user_id'] = Auth::id();
-        $requestData['status'] = "created";        
+        $requestData['status'] = "created";
         //CREATE ORDER      
         $order = Order::create($requestData);
         //UPDATE ORDER ID ในตาราง order_product สำหรับคอลัมน์ที่ order_id เป็น null
         OrderProduct::whereNull('order_id')
-            ->where('user_id', Auth::id() )->update(['order_id'=> $order->id]);
+            ->where('user_id', Auth::id())->update(['order_id' => $order->id]);
         //ปรับลดสินค้าในสต๊อก
         $order_products = $order->order_products;
 
-        foreach($order_products as $item)
-        {
-            Product::where('id',$item->product_id)->decrement('quantity', $item->quantity);
+        foreach ($order_products as $item) {
+            Product::where('id', $item->product_id)->decrement('quantity', $item->quantity);
         }
 
 
@@ -141,6 +140,15 @@ class OrderController extends Controller
         $requestData = $request->all();
 
         $order = Order::findOrFail($id);
+        switch ($requestData['status']) {
+            case "paid":
+                $requestData['paid_at'] = date("Y-m-d H:i:s");
+                break;
+            case "completed":
+                $requestData['completed_at'] = date("Y-m-d H:i:s");
+                break;
+        }
+
         $order->update($requestData);
 
         return redirect('order')->with('flash_message', 'Order updated!');
