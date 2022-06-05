@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Book;
+use App\Models\Location;
 
-class BookController extends Controller
+class LocationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class BookController extends Controller
     public function index()
     {
         //
-        return Book::get();
+        return Location::get();
     }
 
     /**
@@ -27,15 +27,14 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $requestData = $request->all();
-        if ($request->hasFile('image')) {
-            $filename = $request->file('image')->store('uploads', 'public');
-            $requestData['image'] = asset('storage/' . $filename);
-        }
-
-        $item = Book::create($requestData);
+        //ONLY CREATE -> https://laravel.com/docs/8.x/eloquent#mass-assignment
+        // $location = Location::create($requestData);
+        //CREATE OR UPDATE -> https://laravel.com/docs/8.x/eloquent#upserts
+        $user_id = $requestData["user_id"];
+        $item = Location::updateOrCreate(['user_id' => $user_id], $requestData);
         return ["success" => true, "data" => $item];
+
     }
 
     /**
@@ -46,8 +45,7 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        //
-        return Book::findOrFail($id);
+        return Location::findOrFail($id);
     }
 
     /**
@@ -59,14 +57,8 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $requestData = $request->all();
-        if ($request->hasFile('image')) {
-            $filename = $request->file('image')->store('uploads', 'public');
-            $requestData['image'] = asset('storage/' . $filename);
-        }
-
-        $item = Book::findOrFail($id);
+        $item = Location::findOrFail($id);
         $success = $item->update($requestData);
         return ["success" => $success];
     }
@@ -79,8 +71,7 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        //
-        $item = Book::findOrFail($id);
+        $item = Location::findOrFail($id);
         $success = $item->delete();
         return ["success" => $success];
     }
